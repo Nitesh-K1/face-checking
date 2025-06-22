@@ -36,9 +36,9 @@ while True:
 
         for person in db["people"]:
             known_encoding = np.array(person["encoding"])
-            result = face_recognition.compare_faces([known_encoding], face_encoding, tolerance=0.45)
+            distance = face_recognition.face_distance([known_encoding], face_encoding)[0]
 
-            if result[0]:
+            if distance < 0.55:
                 match_found = True
                 person_name = person["name"]
                 break
