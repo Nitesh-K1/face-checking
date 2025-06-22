@@ -3,6 +3,11 @@ import face_recognition
 import json
 import os
 import numpy as np
+import csv
+LOG_DIR = "logs"
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_PATH = os.path.join(LOG_DIR, "checkin_log.csv")
+
 from datetime import datetime
 FACES_DIR = "faces"
 os.makedirs(FACES_DIR, exist_ok=True)
@@ -16,6 +21,11 @@ def save_database(data):
     with open(DB_PATH, "w") as file:
         json.dump(data, file, indent=4)
 db = load_database()
+def log_checkin(name):
+    now = datetime.now()
+    with open(LOG_PATH, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([name, now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S")])
 video_capture = cv2.VideoCapture(0)
 print("Press 'q' to quit.")
 while True:
@@ -40,6 +50,7 @@ while True:
         cv2.putText(frame, person_name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
         if match_found:
             print(f"Recognized: {person_name}")
+            log_checkin(person_name)
         else:
             print("New face detected (not in database)")
             name = input("Enter name for new guest: ")
