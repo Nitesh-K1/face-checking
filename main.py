@@ -50,7 +50,7 @@ while True:
         for person in db["people"]:
             known_encoding = np.array(person["encoding"])
             distance = face_recognition.face_distance([known_encoding], face_encoding)[0]
-            if distance < 0.6:
+            if distance < 0.8:
                 match_found = True
                 person_name = person["name"]
                 break
@@ -84,6 +84,5 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q') or key == 27:
         break
-
 video_capture.release()
 cv2.destroyAllWindows()
