@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Check-In Log</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nepali-datepicker@5.0.1/nepali-datepicker.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nepali-datepicker@5.0.1/nepali-datepicker.min.js"></script>
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="mb-4">Hotel Check-In Log</h2>
+    <form method="get" class="mb-4 row g-2">
+      <div class="col-md-4">
+        <input type="text" name="name" class="form-control" placeholder="Search by name" value="{{ request.args.get('name', '') }}">
+      </div>
+      <div class="col-md-4">
+        <input type="text" name="nepali_date" class="form-control" id="nepali-datepicker" placeholder="Choose Nepali Date">
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+      </div>
+    </form>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in checkins %}
+        <tr>
+          <td>{{ entry.name }}</td>
+          <td>{{ entry.date }}</td>
+          <td>{{ entry.time }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const dateInput = document.getElementById("nepali-datepicker");
+      const nepaliDatePicker = new NepaliDatePicker(dateInput, {
+        ndpYear: true,
+        ndpMonth: true,
+        ndpYearCount: 50
+      });
+    });
+  </script>
+</body>
+</html>
