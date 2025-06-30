@@ -6,6 +6,8 @@ import numpy as np
 import csv
 import datetime
 from nepali_datetime import date as nep_date
+import tkinter as tk
+from tkinter import simpledialog
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 LOG_PATH = os.path.join(LOG_DIR, "checkin_log.csv")
@@ -44,7 +46,7 @@ while True:
         for person in db["people"]:
             known_encoding = np.array(person["encoding"])
             distance = face_recognition.face_distance([known_encoding], face_encoding)[0]
-            if distance < 0.6:
+            if distance < 0.8:
                 match_found = True
                 person_name = person["name"]
                 break
@@ -57,7 +59,18 @@ while True:
             recognized_names.add(person_name)
         elif not match_found:
             print("New face detected (not in database)")
-            name = input("Enter name for new guest: ")
+            root = tk.Tk()
+            root.withdraw()
+            name = simpledialog.askstring("Register New Face", "Enter your name:")
+            root.destroy()
+            if not name:
+                print("No name entered, skipping registration.")
+                continue
+            height, width, _ = frame.shape
+            top = max(top, 0)
+            right = min(right, width)
+            bottom = min(bottom, height)
+            left = max(left, 0)
             face_crop = frame[top:bottom, left:right]
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%I%M%S%p")
             img_path = os.path.join(FACES_DIR, f"{name}_{timestamp}.jpg")
