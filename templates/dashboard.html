@@ -1,45 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Hotel Check-In Log</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-  <div class="container mt-5">
-    <h2 class="mb-4">Hotel Check-In Log</h2>
-    <form method="get" class="mb-4 row g-2">
-      <div class="col-md-6">
-        <input type="text" name="name" class="form-control" placeholder="Search by name" value="{{ request.args.get('name', '') }}">
-      </div>
-      <div class="col-md-6">
-        <button type="submit" class="btn btn-primary w-100">Filter</button>
-      </div>
-    </form>
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>Name</th>
-          <th>Date (BS)</th>
-          <th>Time (12-hr)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if checkins %}
-          {% for entry in checkins %}
-            <tr>
-              <td>{{ entry.name }}</td>
-              <td>{{ entry.date }}</td>
-              <td>{{ entry.time }}</td>
-            </tr>
-          {% endfor %}
-        {% else %}
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Check-in Log</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <h2 class="mb-4">Check-in Log</h2>
+      <form method="get" class="row g-2 mb-4">
+        <div class="col-md-4">
+          <input type="text" name="name" class="form-control" placeholder="Filter by Name" value="{{ request.args.get('name', '') }}" autocomplete="name">
+        </div>
+        <div class="col-md-6 d-flex gap-2">    
+          <select name="bs_year" class="form-select">
+            <option value="">Year(BS)</option>
+            {% for y in range(2075, 2090) %}
+              <option value="{{ y }}" {% if request.args.get('bs_year')|int == y %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+          </select>
+          <select name="bs_month" class="form-select">
+            <option value="">Month</option>
+            {% for m in range(1, 13) %}
+              <option value="{{ m }}" {% if request.args.get('bs_month')|int == m %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+          <select name="bs_day" class="form-select">
+            <option value="">Day</option>
+            {% for d in range(1, 32) %}
+              <option value="{{ d }}" {% if request.args.get('bs_day')|int == d %}selected{% endif %}>{{ d }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+      </form>
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
           <tr>
-            <td colspan="3" class="text-center">No check-in records found.</td>
+            <th>Name</th>
+            <th>Date (BS)</th>
+            <th>Time</th>
           </tr>
-        {% endif %}
-      </tbody>
-    </table>
-  </div>
-</body>
-</html>
+        </thead>
+        <tbody>
+          {% if checkins %}
+            {% for entry in checkins %}
+              <tr>
+                <td>{{ entry.name }}</td>
+                <td>{{ entry.date }}</td>
+                <td>{{ entry.time }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="3" class="text-center">No check-in records found.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+  </html>
