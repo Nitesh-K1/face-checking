@@ -1,0 +1,31 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+venv310/
+
+# Logs and check-in data
+logs/
+*.log
+*.csv
+
+# Face image captures
+faces/
+
+# Face recognition database
+data/face_data.json
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# Jupyter checkpoints (if used)
+.ipynb_checkpoints/
+
+# OS/system files
+.DS_Store
+Thumbs.db
