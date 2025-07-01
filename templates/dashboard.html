@@ -35,8 +35,8 @@
       <div class="col-md-2 d-flex gap-2">
         <button type="submit" class="btn btn-primary w-50">Filter</button>
         {% if request.args.get('name') or request.args.get('bs_year') or request.args.get('bs_month') or request.args.get('bs_day') %}
-          <a href="?name=&bs_year=&bs_month=&bs_day=" class="btn btn-secondary w-50">Show All</a>
         {% endif %}
+        <a href="?name=&bs_year=&bs_month=&bs_day=" class="btn btn-secondary w-50">Show All</a>
       </div>
     </form>
     <table class="table table-bordered table-striped">
