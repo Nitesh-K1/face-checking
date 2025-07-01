@@ -15,7 +15,8 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             date_bs TEXT NOT NULL,
-            time_12hr TEXT NOT NULL
+            time_12hr TEXT NOT NULL,
+            image_path TEXT NOT NULL
         )
     ''')
     conn.commit()
@@ -25,7 +26,7 @@ def get_checkins(name_query="", date_query=""):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    query = "SELECT id, name, date_bs, time_12hr FROM checkins WHERE 1=1"
+    query = "SELECT id, name, date_bs, time_12hr, image_path FROM checkins WHERE 1=1"
     params = []
 
     if name_query:
@@ -40,7 +41,7 @@ def get_checkins(name_query="", date_query=""):
     rows = cursor.fetchall()
     conn.close()
 
-    return [{"id": r[0], "name": r[1], "date": r[2], "time": r[3]} for r in rows]
+    return [{"id": r[0], "name": r[1], "date": r[2], "time": r[3], "image_path": r[4]} for r in rows]
 
 def delete_checkin(id):
     conn = sqlite3.connect(DB_PATH)
