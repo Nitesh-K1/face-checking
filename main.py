@@ -3,14 +3,14 @@ import face_recognition
 import json
 import os
 import numpy as np
-import csv
 import datetime
+import sqlite3
 from nepali_datetime import date as nep_date
 import tkinter as tk
 from tkinter import simpledialog
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
-LOG_PATH = os.path.join(LOG_DIR, "checkin_log.csv")
+LOG_DB_PATH = os.path.join(LOG_DIR, "checkin_log.db")
 FACES_DIR = "faces"
 os.makedirs(FACES_DIR, exist_ok=True)
 DB_PATH = "data/face_data.json"
@@ -23,12 +23,24 @@ def load_database():
 def save_database(data):
     with open(DB_PATH, "w") as file:
         json.dump(data, file, indent=4)
-def log_checkin(name):
+def log_checkin_db(name):
     now_ad = datetime.datetime.now()
     now_bs = nep_date.from_datetime_date(now_ad.date())
-    with open(LOG_PATH, "a", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow([name, now_bs.strftime("%Y-%m-%d"), now_ad.strftime("%I:%M:%S %p")])
+    conn = sqlite3.connect(LOG_DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS checkins (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            date_bs TEXT NOT NULL,
+            time_12hr TEXT NOT NULL
+        )
+    ''')
+    cursor.execute('''
+        INSERT INTO checkins (name, date_bs, time_12hr) VALUES (?, ?, ?)
+    ''', (name, now_bs.strftime("%Y-%m-%d"), now_ad.strftime("%I:%M:%S %p")))
+    conn.commit()
+    conn.close()
 db = load_database()
 video_capture = cv2.VideoCapture(0)
 recognized_names = set()
@@ -55,7 +67,7 @@ while True:
         cv2.putText(frame, person_name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
         if match_found and person_name not in recognized_names:
             print(f"Recognized: {person_name}")
-            log_checkin(person_name)
+            log_checkin_db(person_name)
             recognized_names.add(person_name)
         elif not match_found:
             print("New face detected (not in database)")
