@@ -1,4 +1,11 @@
 py -3.10 -m venv venv310
 .\venv310\Scripts\activate
 pip install -r requirements.txt
+ Install Visual Studio Build Tools 
+     https://visualstudio.microsoft.com/visual-cpp-build-tools/
+        select these Components
+        Windows SDK	10.0.19041.0 (Windows 10 SDK)
+        CMake 3.22
+        MSVC v142 (or v143)
+        C++ Desktop Development	(entire workload)
 run all of the above on terminal one by one from start
